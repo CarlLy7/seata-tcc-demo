@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carl.mapper.ProductLockedMapper">
+
+    <resultMap id="BaseResultMap" type="com.carl.domain.ProductLocked">
+            <id property="xid" column="xid" jdbcType="VARCHAR"/>
+            <result property="productId" column="product_id" jdbcType="INTEGER"/>
+            <result property="lockedQty" column="locked_qty" jdbcType="INTEGER"/>
+            <result property="lockedStatus" column="locked_status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        xid,product_id,locked_qty,
+        locked_status
+    </sql>
+</mapper>

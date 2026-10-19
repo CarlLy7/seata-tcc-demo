@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carl.mapper.AccountFreezeMapper">
+
+    <resultMap id="BaseResultMap" type="com.carl.domain.AccountFreeze">
+            <id property="xid" column="xid" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="freezeMoney" column="freeze_money" jdbcType="DECIMAL"/>
+            <result property="freezeStatus" column="freeze_status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        xid,user_id,freeze_money,
+        freeze_status
+    </sql>
+</mapper>
