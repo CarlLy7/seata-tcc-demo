@@ -15,8 +15,22 @@
     </sql>
     <update id="decreaseProductInventory">
         update product_inventory
-        set qty=qty-#{saleQty}
+        set qty=qty-#{saleQty},
+            locked_qty=locked_qty-#{saleQty}
         where product_id=#{productId}
         and qty-#{saleQty}>=0
+        and locked_qty-#{saleQty}>=0
+    </update>
+    <update id="lockedQty">
+        update product_inventory
+        set locked_qty=locked_qty+#{lockedQty}
+        where product_id=#{productId}
+        and qty-(locked_qty+#{lockedQty})>=0
+    </update>
+    <update id="decreaseLockedQty">
+        update product_inventory
+        set locked_qty=locked_qty-#{saleQty}
+        where product_id=#{productId}
+          and locked_qty-#{saleQty}>=0
     </update>
 </mapper>

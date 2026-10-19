@@ -25,7 +25,12 @@ public class ProductInventory {
     private Integer productId;
 
     /**
-     * 
+     * 可用库存
      */
     private Integer qty;
+
+    /**
+     * 锁定库存
+     */
+    private Integer lockedQty;
 }

@@ -26,7 +26,14 @@ public class UserAccount {
     private Integer userId;
 
     /**
-     * 
+     * 余额
      */
     private BigDecimal balance;
+
+    /**
+     * 冻结余额
+     */
+    private BigDecimal freezeBalance;
+
+
 }

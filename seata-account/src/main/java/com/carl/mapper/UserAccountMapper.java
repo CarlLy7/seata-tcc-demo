@@ -17,6 +17,10 @@ import java.math.BigDecimal;
 public interface UserAccountMapper extends BaseMapper<UserAccount> {
 
     int deduceBalance(@Param("userId") Integer userId, @Param("balance") BigDecimal balance);
+
+    int freezeBalance(@Param("userId") Integer userId, @Param("freezeBalance") BigDecimal balance);
+
+    int increaseBalance(@Param("userId") Integer userId, @Param("balance") BigDecimal balance);
 }
 
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carl.mapper.TccFenceLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.carl.domain.TccFenceLog">
+            <id property="xid" column="xid" jdbcType="VARCHAR"/>
+            <id property="branchId" column="branch_id" jdbcType="BIGINT"/>
+            <result property="actionName" column="action_name" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+            <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        xid,branch_id,action_name,
+        status,gmt_create,gmt_modified
+    </sql>
+</mapper>

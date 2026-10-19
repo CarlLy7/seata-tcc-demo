@@ -20,8 +20,8 @@ public class SeataOrderApplicationTest {
         Order order = new Order();
         order.setUserId(1);
         order.setProductId(1);
-        order.setPrice(BigDecimal.valueOf(100));
-        order.setSaleQty(10);
+        order.setPrice(BigDecimal.valueOf(10));
+        order.setSaleQty(1);
 
         orderService.createOrder(order);
     }

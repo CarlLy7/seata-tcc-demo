@@ -15,8 +15,22 @@
     </sql>
     <update id="deduceBalance">
         update user_account
-        set balance=balance-#{balance}
+        set balance=balance-#{balance},
+            freeze_balance=freeze_balance-#{balance}
         where user_id=#{userId}
         and balance-#{balance}>=0
+        and freeze_balance-#{balance}>=0
+    </update>
+    <update id="freezeBalance">
+        update user_account
+        set freeze_balance=freeze_balance+#{freezeBalance}
+        where user_id=#{userId}
+        and balance-(freeze_balance+#{freezeBalance})>=0
+    </update>
+    <update id="increaseBalance">
+        update user_account
+        set freeze_balance=freeze_balance-#{balance}
+        where user_id=#{userId}
+          and freeze_balance-#{balance}>=0
     </update>
 </mapper>

@@ -1,9 +1,7 @@
 package com.carl.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.carl.domain.ProductLocked;
 import com.carl.mapper.ProductInventoryMapper;
-import com.carl.service.ProductLockedService;
 import com.carl.service.SaleProductTccService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.seata.rm.tcc.api.*;
@@ -25,11 +23,9 @@ public class SaleProductTccServiceImpl implements SaleProductTccService {
     private ProductInventoryMapper productInventoryMapper;
 
 
-    @Autowired
-    private ProductLockedService productLockedService;
-
     /**
      * try阶段
+     * 增加锁定数量
      *
      * @param productId
      * @param saleQty
@@ -40,8 +36,6 @@ public class SaleProductTccServiceImpl implements SaleProductTccService {
     public boolean saleProduct(@BusinessActionContextParameter(value = "productId") Integer productId,
                                @BusinessActionContextParameter(value = "saleQty") Integer saleQty) {
 
-        BusinessActionContext context = BusinessActionContextUtil.getContext();
-        String xid = context.getXid();
         /**
          * 业务悬挂问题
          * 注意：我们开启了useTCCFence，框架会自动帮我们处理业务悬挂问题
@@ -53,48 +47,45 @@ public class SaleProductTccServiceImpl implements SaleProductTccService {
 //            return false;
 //        }
 
-        //创建锁定库存数据
-
-        ProductLocked locked = new ProductLocked();
-        locked.setXid(xid);
-        locked.setProductId(productId);
-        locked.setLockedQty(saleQty);
-        locked.setLockedStatus(0);
-        return productLockedService.save(locked);
+        //锁定库存数量，锁定数量增加
+        int updateRows = productInventoryMapper.lockedQty(productId, saleQty);
+        if (updateRows == 0) {
+            System.out.println("锁定库存数量失败");
+            return false;
+        }
+        return true;
 
 
     }
 
     /**
      * confirm阶段
-     *
+     * 锁定库存数量扣减、可用库存数量扣减
      * @param actionContext
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public boolean confirm(BusinessActionContext actionContext) {
-        String xid = actionContext.getXid();
-        //删除锁定记录
-        productLockedService.removeById(xid);
 
         Integer productId = actionContext.getActionContext("productId", Integer.class);
         Integer saleQty = actionContext.getActionContext("saleQty", Integer.class);
         int rows = productInventoryMapper.decreaseProductInventory(productId, saleQty);
-        return rows != 0;
+        if(rows==0){
+            System.out.println("扣减库存失败");
+            return false;
+        }
+        return true;
     }
 
     /**
      * cancel阶段
-     *
+     * 扣减锁定数量
      * @param actionContext
      * @return
      */
     @Override
     public boolean cancel(BusinessActionContext actionContext) {
 
-        String xid = actionContext.getXid();
-        ProductLocked productLocked = productLockedService.getById(xid);
         //空回滚，useTCCFence开启后框架会帮我们自动实现
 //        if (productLocked == null) {
 //            Integer saleQty = actionContext.getActionContext("saleQty", Integer.class);
@@ -108,8 +99,13 @@ public class SaleProductTccServiceImpl implements SaleProductTccService {
 //            return productLockedService.save(locked);
 //        }
 
-        return productLockedService.update(Wrappers.lambdaUpdate(ProductLocked.class)
-                .eq(ProductLocked::getXid, xid)
-                .set(ProductLocked::getLockedStatus, 2));
+        Integer productId = actionContext.getActionContext("productId", Integer.class);
+        Integer saleQty = actionContext.getActionContext("saleQty", Integer.class);
+        int updateRows = productInventoryMapper.decreaseLockedQty(productId, saleQty);
+        if (updateRows==0){
+            System.out.println("释放锁定数量失败");
+            return false;
+        }
+        return true;
     }
 }

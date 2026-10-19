@@ -15,6 +15,10 @@ import org.apache.ibatis.annotations.Param;
 public interface ProductInventoryMapper extends BaseMapper<ProductInventory> {
 
     int decreaseProductInventory(@Param("productId") Integer productId, @Param("saleQty") Integer saleQty);
+
+    int lockedQty(@Param("productId") Integer productId, @Param("lockedQty") Integer saleQty);
+
+    int decreaseLockedQty(@Param("productId") Integer productId, @Param("saleQty") Integer saleQty);
 }
 
 

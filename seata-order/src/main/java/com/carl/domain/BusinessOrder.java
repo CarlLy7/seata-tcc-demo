@@ -41,11 +41,6 @@ public class BusinessOrder {
     private BigDecimal price;
 
     /**
-     * 事务id
-     */
-    private String xid;
-
-    /**
      * 
      */
     private LocalDateTime createTime;
